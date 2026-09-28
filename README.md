@@ -121,4 +121,24 @@ Postgres can run on the same VPS or be any hosted Postgres; only `DATABASE_URL` 
 
 ## Use of AI tools
 
-<!-- Write this section yourself: where you used AI, what you checked, and where you overrode or corrected it. -->
+I used Claude Code (Claude) to plan the design and write most of the code. I made the decisions, reviewed the output, and tested it myself.
+
+**Where I steered or overrode it**
+
+- **Stack.** It first proposed Python. I switched to NestJS to match what I use daily, and copied my existing project's TypeScript setup.
+- **Database.** I considered Supabase. We settled on plain Postgres through the `pg` driver with Docker for local use, so reviewers don't need an account and no SDK is involved.
+- **Scope.** I dropped ESLint and kept only Prettier. I picked Jest over Cypress (which I know better) because there is no UI to test.
+- **Process.** It started writing code before I had approved the plan. I had it delete everything and only build once we had agreed on the full design.
+- **Second opinion.** A developer friend suggested a plain `fetch` in a `setInterval`. I kept the simple `fetch`, but the design moved to `setTimeout` with backoff (no overlapping polls) and explicit timeout, status and JSON checks, since `fetch` alone doesn't fail on a 500 or a hang.
+
+**Where it was wrong**
+
+- **Timeout bug.** The tests caught that timeouts were being reported as network errors. The error-name check it wrote doesn't work under Jest. It now checks the request's own abort signal.
+- **Comments.** I wrote the explanatory comments myself, then had them reviewed. Some of my claims were wrong or unverified (for example, `pg` has no default connection timeout, and there's no evidence USGS sends bad envelopes), so I corrected them.
+
+**How I verified it**
+
+- 50 automated tests against a real Postgres and a fake USGS server.
+- Called the endpoints with Postman.
+- Inspected the table in DBeaver to confirm there are no duplicate ids.
+- Cleared the table and watched the poller refill it from the live feed.
