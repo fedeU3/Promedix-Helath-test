@@ -1,0 +1,55 @@
+{
+  "name": "quakes-poller",
+  "version": "0.1.0",
+  "description": "Polls the USGS earthquake feed into Postgres and serves the largest recent quakes.",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:prod": "node dist/main",
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.1.14",
+    "@nestjs/config": "4.0.3",
+    "@nestjs/core": "11.1.14",
+    "@nestjs/platform-express": "11.1.14",
+    "pg": "8.18.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "11.0.16",
+    "@nestjs/schematics": "11.0.9",
+    "@nestjs/testing": "11.1.14",
+    "@types/express": "4.17.21",
+    "@types/jest": "29.5.14",
+    "@types/node": "20.19.5",
+    "@types/pg": "8.23.1",
+    "@types/supertest": "6.0.3",
+    "jest": "29.7.0",
+    "prettier": "3.8.1",
+    "source-map-support": "0.5.21",
+    "supertest": "7.2.2",
+    "ts-jest": "29.4.6",
+    "ts-loader": "9.5.4",
+    "ts-node": "10.9.2",
+    "tsconfig-paths": "4.2.0",
+    "typescript": "5.9.3"
+  },
+  "jest": {
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "testEnvironment": "node"
+  }
+}

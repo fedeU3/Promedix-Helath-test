@@ -1,0 +1,35 @@
+# /etc/systemd/system/quakes.service
+#
+# Install:
+#   sudo useradd --system --no-create-home quakes
+#   sudo cp -r . /opt/quakes && cd /opt/quakes && sudo npm ci && sudo npm run build
+#   sudo cp deploy/quakes.service /etc/systemd/system/
+#   sudo install -m 600 -o root .env /etc/quakes.env   # holds DATABASE_URL
+#   sudo systemctl daemon-reload && sudo systemctl enable --now quakes
+#
+# Logs: journalctl -u quakes -f
+
+[Unit]
+Description=USGS earthquake poller
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=quakes
+WorkingDirectory=/opt/quakes
+EnvironmentFile=/etc/quakes.env
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node dist/main.js
+Restart=always
+RestartSec=5
+# Nest finishes the in-flight poll on SIGTERM; don't wait forever.
+TimeoutStopSec=30
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
